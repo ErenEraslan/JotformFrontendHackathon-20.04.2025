@@ -1,15 +1,60 @@
-# Jotform Frontend Hackathon Project
+# Jotform Frontend Hackathon Project - JotShop E-commerce
 
 ## User Information
-Please fill in your information after forking this repository:
-
-- **Name**: [Your Name]
+- **Name**: Eren Berk Eraslan
 
 ## Project Description
-[Add a brief description of your project here]
+JotShop is a modern e-commerce application built for the Jotform Frontend Hackathon. The application fetches product data from Jotform's API and displays it in a user-friendly interface with a shopping cart, filter functionality, and multiple product views.
+
+### Features
+- Product catalog display with filtering options
+- Shopping cart functionality with add/remove items
+- Search functionality for products
+- Multiple data sources via Jotform APIs
+- Responsive design for mobile and desktop
+- Modern UI/UX with animations and transitions
+
+## Technologies Used
+- Next.js with TypeScript
+- React Hooks for state management
+- Axios for API requests
+- Tailwind CSS for styling
+- React Icons for icon components
 
 ## Getting Started
-[Add instructions for setting up and running the project]
+
+### Prerequisites
+- Node.js 18.0.0 or later
+- npm or yarn
+
+### Installation
+1. Clone this repository
+2. Navigate to the project directory
+3. Install dependencies:
+```bash
+cd ecommerce-app
+npm install
+```
+
+### Running the development server
+```bash
+npm run dev
+```
+
+### Building for production
+```bash
+npm run build
+npm start
+```
+
+## API Integration
+The application uses Jotform's API to fetch product data:
+- API Key: 5b3b3313668f2192e75dce86fd79fd8a
+- Endpoint: https://api.jotform.com/form/:formID/payment-info?apiKey={apiKey}
+- Form IDs: 
+  - 251074116166956
+  - 251073669442965
+  - 251073643151954
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
