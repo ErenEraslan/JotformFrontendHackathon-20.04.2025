@@ -75,18 +75,7 @@ const Header: React.FC = () => {
 
           {/* Right side icons */}
           <div className="flex items-center">
-            <button
-              onClick={openCart}
-              className="ml-4 flex items-center text-gray-700 hover:text-blue-600 transition-colors relative p-2 rounded-full hover:bg-gray-100"
-            >
-              <FiShoppingCart className="h-6 w-6" />
-              {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white">
-                  {totalItems}
-                </span>
-              )}
-            </button>
-
+            
             {/* Mobile menu button */}
             <button
               type="button"
