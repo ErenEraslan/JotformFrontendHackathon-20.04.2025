@@ -91,6 +91,10 @@ const mapProductFromJotform = (product: any, index: number, formId?: string): Pr
   const price = parseFloat(product.price || product.amount || '0') || 0;
   const description = product.description || product.text || `High-quality product for all your needs. Premium selection for our valued customers.`;
   
+  // Extract category from product name if not explicitly provided
+  const extractedCategory = extractCategoryFromName(name);
+  const category = product.category || product.productCategory || product.type || extractedCategory;
+  
   // Parse images from JSON string
   let imageUrls: string[] = [];
   let primaryImageUrl = 'https://placehold.co/400x300';
@@ -121,9 +125,6 @@ const mapProductFromJotform = (product: any, index: number, formId?: string): Pr
     primaryImageUrl = product.imageUrl;
   }
   
-  // Use more fallbacks for product category
-  const category = product.category || product.productCategory || product.type || 'General';
-  
   return {
     id: product.pid || product.id || product.productId || `product-${index}`,
     name,
@@ -137,21 +138,37 @@ const mapProductFromJotform = (product: any, index: number, formId?: string): Pr
   };
 };
 
+// Helper to extract category from product name
+const extractCategoryFromName = (name: string): string => {
+  // Extract the name before the first comma
+  const categoryName = name.split(',')[0].trim();
+  if (categoryName && categoryName.length > 1) {
+    // Capitalize first letter
+    return categoryName.charAt(0).toUpperCase() + categoryName.slice(1);
+  }
+  
+  // Default fallback
+  return 'Other';
+};
+
 // Fallback products if API doesn't return data
 const getDummyProducts = (formId?: string): ProductItem[] => {
-  const categories = ['Electronics', 'Clothing', 'Home & Garden', 'Sports', 'Beauty'];
-  
-  return Array.from({ length: 12 }, (_, i) => ({
-    id: `dummy-${i}`,
-    name: `Product ${i + 1}`,
-    price: 10 + i * 5,
-    description: 'This is a placeholder product when the API doesn\'t return data.',
-    image: `https://placehold.co/400x300/4096ff/ffffff?text=Product+${i + 1}`,
-    images: [`https://placehold.co/400x300/4096ff/ffffff?text=Product+${i + 1}`],
-    category: categories[i % categories.length],
-    stock: 10,
-    source: formId
-  }));
+  // We'll only provide a minimal set of products since real data is preferred
+  return Array.from({ length: 8 }, (_, i) => {
+    const id = `product-${i + 1}`;
+    const name = `Product ${i + 1}`;
+    return {
+      id: id,
+      name: name,
+      price: 10 + i * 5,
+      description: 'This product is currently unavailable from the API.',
+      image: `https://placehold.co/400x300/4096ff/ffffff?text=${encodeURIComponent(name)}`,
+      images: [`https://placehold.co/400x300/4096ff/ffffff?text=${encodeURIComponent(name)}`],
+      category: 'Product', // Simple category based on product name
+      stock: 10,
+      source: formId
+    };
+  });
 };
 
 export default {

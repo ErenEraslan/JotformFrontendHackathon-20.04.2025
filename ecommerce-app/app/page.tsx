@@ -26,9 +26,9 @@ export default function Home() {
         const sortedForm3 = [...form3Products].sort((a, b) => b.price - a.price);
         
         // Get the most expensive products from each form
-        const form1Selection = sortedForm1.slice(0, 3); // 3 most expensive from form1
-        const form2Selection = sortedForm2.slice(0, 3); // 3 most expensive from form2
-        const form3Selection = sortedForm3.slice(1, 3); // 2 most expensive from form3
+        const form1Selection = sortedForm1.slice(0, 4); // 3 most expensive from form1
+        const form2Selection = sortedForm2.slice(0, 4); // 3 most expensive from form2
+        const form3Selection = sortedForm3.slice(1, 5); // 2 most expensive from form3
         
         // Combine all selected products
         const selectedProducts = [

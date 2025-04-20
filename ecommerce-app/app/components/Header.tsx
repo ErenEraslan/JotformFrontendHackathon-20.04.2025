@@ -2,14 +2,16 @@
 
 import React, { useState, useContext } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { FiMenu, FiX, FiShoppingBag, FiShoppingCart } from 'react-icons/fi';
 import { useCart } from '../context/CartContext';
 import { CartOpenContext } from './ShoppingCart';
+import logo from '../../public/jotform-icon.png';
 
 const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { totalItems } = useCart();
-  const openCart = useContext(CartOpenContext);
+  const { openCart } = useContext(CartOpenContext);
 
   return (
     <header className="sticky top-0 z-40 w-full bg-white shadow-sm">
@@ -18,7 +20,14 @@ const Header: React.FC = () => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center">
-              <FiShoppingBag className="h-8 w-8 text-blue-600" />
+              <Image 
+                src={logo} 
+                alt="JotShop Logo" 
+                className="h-10 w-10 rounded-full" 
+                width={40} 
+                height={40} 
+                priority 
+              />
               <span className="ml-2 text-xl font-bold text-gray-900">JotShop</span>
             </Link>
           </div>
@@ -38,30 +47,39 @@ const Header: React.FC = () => {
               Products
             </Link>
             <Link
-              href="/categories"
-              className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-700 hover:border-blue-500 hover:text-blue-600"
-            >
-              Categories
-            </Link>
-            <Link
               href="/about"
               className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-700 hover:border-blue-500 hover:text-blue-600"
             >
               About
             </Link>
+            {totalItems > 0 && (
+              <Link
+                href="/checkout"
+                className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-700 hover:border-blue-500 hover:text-blue-600"
+              >
+                Checkout
+              </Link>
+            )}
+            {/* Developer tools - only show in development */}
+            {process.env.NODE_ENV !== 'production' && (
+              <Link
+                href="/form-details"
+                className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-indigo-600 hover:border-indigo-500 hover:text-indigo-800"
+              >
+                Form Details
+              </Link>
+            )}
           </nav>
 
-          {/* Cart and Mobile Menu Button */}
-          <div className="flex items-center space-x-4">
-            {/* Cart Icon */}
+          {/* Right side icons */}
+          <div className="flex items-center">
             <button
-              className="relative flex items-center text-gray-700 hover:text-blue-600 transition-colors"
               onClick={openCart}
-              aria-label="Open shopping cart"
+              className="ml-4 flex items-center text-gray-700 hover:text-blue-600 transition-colors relative p-2 rounded-full hover:bg-gray-100"
             >
               <FiShoppingCart className="h-6 w-6" />
               {totalItems > 0 && (
-                <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white">
+                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white">
                   {totalItems}
                 </span>
               )}
@@ -103,19 +121,31 @@ const Header: React.FC = () => {
               Products
             </Link>
             <Link
-              href="/categories"
-              className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-700 hover:border-blue-500 hover:bg-gray-50 hover:text-blue-600"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Categories
-            </Link>
-            <Link
               href="/about"
               className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-700 hover:border-blue-500 hover:bg-gray-50 hover:text-blue-600"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               About
             </Link>
+            {totalItems > 0 && (
+              <Link
+                href="/checkout"
+                className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-700 hover:border-blue-500 hover:bg-gray-50 hover:text-blue-600"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Checkout
+              </Link>
+            )}
+            {/* Developer tools - only show in development */}
+            {process.env.NODE_ENV !== 'production' && (
+              <Link
+                href="/form-details"
+                className="block border-l-4 border-indigo-500 py-2 pl-3 pr-4 text-base font-medium text-indigo-700 bg-indigo-50"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Form Details
+              </Link>
+            )}
             {/* Shopping cart link for mobile */}
             <button
               className="flex w-full items-center border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-700 hover:border-blue-500 hover:bg-gray-50 hover:text-blue-600"

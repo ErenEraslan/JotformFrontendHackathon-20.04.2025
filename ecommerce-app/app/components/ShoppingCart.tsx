@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { FiX, FiPlus, FiMinus, FiShoppingCart, FiCreditCard, FiLock } from 'react-icons/fi';
+import React, { useState, useEffect, createContext } from 'react';
+import { FiX, FiPlus, FiMinus, FiShoppingCart, FiCreditCard, FiLock, FiTag } from 'react-icons/fi';
 import { useCart } from '../context/CartContext';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 interface ImageErrorMap {
   [key: string]: boolean;
@@ -17,12 +18,44 @@ interface CheckoutFormData {
 }
 
 // Create a context to allow other components to open the cart
-export const CartOpenContext = React.createContext<() => void>(() => {});
+interface CartOpenContextType {
+  isOpen: boolean;
+  openCart: () => void;
+}
+export const CartOpenContext = createContext<CartOpenContextType>({ isOpen: false, openCart: () => {} });
+
+// Helper function to get friendly form name
+const getFormName = (source?: string) => {
+  const formNames: Record<string, string> = {
+    'form1': 'Electronics Store',
+    'form2': 'Fashion Shop',
+    'form3': 'Home Goods',
+    '251074116166956': 'Electronics Store',
+    '251073669442965': 'Fashion Shop',
+    '251073643151954': 'Home Goods',
+  };
+  
+  return formNames[source || ''] || 'General Store';
+};
+
+// Helper function to get source badge color
+const getSourceBadgeColors = (source?: string) => {
+  const sourceColors: Record<string, { bg: string, text: string }> = {
+    'form1': { bg: 'bg-blue-100', text: 'text-blue-700' },
+    'form2': { bg: 'bg-green-100', text: 'text-green-700' },
+    'form3': { bg: 'bg-purple-100', text: 'text-purple-700' },
+    '251074116166956': { bg: 'bg-blue-100', text: 'text-blue-700' },
+    '251073669442965': { bg: 'bg-green-100', text: 'text-green-700' },
+    '251073643151954': { bg: 'bg-purple-100', text: 'text-purple-700' },
+  };
+  
+  return sourceColors[source || ''] || { bg: 'bg-gray-100', text: 'text-gray-700' };
+};
 
 const ShoppingCart: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const { items, removeFromCart, updateQuantity, totalItems, totalPrice, clearCart } = useCart();
+  const { items, removeFromCart, updateQuantity, totalItems, totalPrice, clearCart, currentSource } = useCart();
   const [imageErrors, setImageErrors] = useState<ImageErrorMap>({});
   const [isAnimating, setIsAnimating] = useState(false);
   const [formData, setFormData] = useState<CheckoutFormData>({
@@ -33,6 +66,7 @@ const ShoppingCart: React.FC = () => {
   });
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (isOpen) {
@@ -83,7 +117,8 @@ const ShoppingCart: React.FC = () => {
   };
 
   const handleCheckout = () => {
-    setIsCheckoutOpen(true);
+    setIsOpen(false);
+    router.push('/checkout');
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -140,7 +175,7 @@ const ShoppingCart: React.FC = () => {
   };
 
   return (
-    <CartOpenContext.Provider value={openCart}>
+    <CartOpenContext.Provider value={{ isOpen, openCart }}>
       {/* Floating Cart Button */}
       <button
         onClick={openCart}
@@ -173,7 +208,17 @@ const ShoppingCart: React.FC = () => {
         <div className="flex h-full flex-col overflow-y-auto">
           <div className="px-4 py-6 sm:px-6">
             <div className="flex items-start justify-between">
-              <h2 className="text-lg font-medium text-gray-900">Shopping Cart</h2>
+              <div>
+                <h2 className="text-lg font-medium text-gray-900">Shopping Cart</h2>
+                {currentSource && (
+                  <div className="mt-1">
+                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getSourceBadgeColors(currentSource).bg} ${getSourceBadgeColors(currentSource).text}`}>
+                      <FiTag className="mr-1 h-3 w-3" />
+                      {getFormName(currentSource)}
+                    </span>
+                  </div>
+                )}
+              </div>
               <button
                 onClick={handleClose}
                 className="rounded-md p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-700 transition-colors"
@@ -263,7 +308,7 @@ const ShoppingCart: React.FC = () => {
                       onClick={handleCheckout}
                       className="w-full rounded-md bg-blue-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-blue-700 transition-colors"
                     >
-                      Checkout
+                      Proceed to Checkout
                     </button>
                   </div>
                   <div className="mt-2">
@@ -316,130 +361,25 @@ const ShoppingCart: React.FC = () => {
                     </p>
                   </div>
                   
-                  <form onSubmit={handleSubmit}>
-                    <div className="mb-10">
-                      <div className="bg-white rounded-lg shadow-lg p-5 mb-4">
-                        <div className="flex justify-between mb-4">
-                          <div>
-                            <img src="/visa.svg" alt="Visa" className="h-6" />
-                          </div>
-                          <div className="flex space-x-2">
-                            <img src="/mastercard.svg" alt="Mastercard" className="h-6" />
-                            <img src="/amex.svg" alt="American Express" className="h-6" />
-                          </div>
-                        </div>
-                        
-                        <div className="space-y-4">
-                          <div>
-                            <label htmlFor="cardNumber" className="block text-sm font-medium text-gray-700 mb-1">
-                              Card Number
-                            </label>
-                            <input
-                              type="text"
-                              id="cardNumber"
-                              name="cardNumber"
-                              placeholder="1234 5678 9012 3456"
-                              value={formData.cardNumber}
-                              onChange={handleInputChange}
-                              className="w-full p-3 border border-gray-300 text-gray-800 placeholder-gray-700 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                              required
-                            />
-                          </div>
-                          
-                          <div>
-                            <label htmlFor="cardName" className="block text-sm font-medium text-gray-700 mb-1">
-                              Cardholder Name
-                            </label>
-                            <input
-                              type="text"
-                              id="cardName"
-                              name="cardName"
-                              placeholder="John Doe"
-                              value={formData.cardName}
-                              onChange={handleInputChange}
-                              className="w-full p-3 border border-gray-300 text-gray-800 placeholder-gray-700 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                              required
-                            />
-                          </div>
-                          
-                          <div className="flex space-x-4">
-                            <div className="w-1/2">
-                              <label htmlFor="expiry" className="block text-sm font-medium text-gray-700 mb-1">
-                                Expiry Date
-                              </label>
-                              <input
-                                type="text"
-                                id="expiry"
-                                name="expiry"
-                                placeholder="MM/YY"
-                                value={formData.expiry}
-                                onChange={handleInputChange}
-                                className="w-full p-3 border border-gray-300 text-gray-800 placeholder-gray-700 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                required
-                              />
-                            </div>
-                            <div className="w-1/2">
-                              <label htmlFor="cvv" className="block text-sm font-medium text-gray-700 mb-1">
-                                CVV
-                              </label>
-                              <input
-                                type="text"
-                                id="cvv"
-                                name="cvv"
-                                placeholder="123"
-                                value={formData.cvv}
-                                onChange={handleInputChange}
-                                className="w-full p-3 border border-gray-300 text-gray-800 placeholder-gray-700 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                required
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="bg-gray-50 rounded-lg p-4">
-                        <div className="flex justify-between mb-2">
-                          <span className="font-medium text-gray-700">Subtotal</span>
-                          <span className="font-medium">${totalPrice.toFixed(2)}</span>
-                        </div>
-                        <div className="flex justify-between mb-2">
-                          <span className="font-medium text-gray-700">Shipping</span>
-                          <span className="font-medium">$4.99</span>
-                        </div>
-                        <div className="flex justify-between pt-2 border-t border-gray-200">
-                          <span className="font-bold text-gray-900">Total</span>
-                          <span className="font-bold text-gray-900">${(totalPrice + 4.99).toFixed(2)}</span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="flex space-x-3">
-                      <button
-                        type="button"
-                        onClick={() => setIsCheckoutOpen(false)}
-                        className="flex-1 rounded-md border border-gray-300 bg-white py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none"
-                      >
-                        Back to Cart
-                      </button>
-                      <button
-                        type="submit"
-                        className="flex-1 rounded-md bg-blue-600 py-3 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none flex justify-center items-center"
-                        disabled={isProcessing}
-                      >
-                        {isProcessing ? (
-                          <>
-                            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            Processing...
-                          </>
-                        ) : (
-                          `Pay ${(totalPrice + 4.99).toFixed(2)} USD`
-                        )}
-                      </button>
-                    </div>
-                  </form>
+                  <div className="flex justify-center mb-6">
+                    <button
+                      onClick={() => {
+                        setIsOpen(false);
+                        router.push('/checkout');
+                      }}
+                      className="w-full rounded-md bg-blue-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-blue-700 transition-colors"
+                    >
+                      Continue to Checkout Page
+                    </button>
+                  </div>
+                  
+                  <button
+                    type="button"
+                    onClick={() => setIsCheckoutOpen(false)}
+                    className="w-full rounded-md border border-gray-300 bg-white py-3 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none"
+                  >
+                    Back to Cart
+                  </button>
                 </>
               )}
             </div>
