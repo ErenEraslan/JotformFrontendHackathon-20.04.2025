@@ -3,7 +3,7 @@
 import React, { useState, useContext } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FiMenu, FiX, FiShoppingBag, FiShoppingCart } from 'react-icons/fi';
+import { FiMenu, FiX, FiShoppingBag, FiShoppingCart, FiHeart } from 'react-icons/fi';
 import { useCart } from '../context/CartContext';
 import { CartOpenContext } from './ShoppingCart';
 import logo from '../../public/jotform-icon.png';
@@ -47,11 +47,13 @@ const Header: React.FC = () => {
               Products
             </Link>
             <Link
-              href="/about"
+              href="/favorites"
               className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-700 hover:border-blue-500 hover:text-blue-600"
             >
-              About
+              
+              Favorites
             </Link>
+            
             {totalItems > 0 && (
               <Link
                 href="/checkout"
@@ -119,6 +121,16 @@ const Header: React.FC = () => {
               onClick={() => setIsMobileMenuOpen(false)}
             >
               Products
+            </Link>
+            <Link
+              href="/favorites"
+              className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-700 hover:border-blue-500 hover:bg-gray-50 hover:text-blue-600"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <div className="flex items-center">
+                <FiHeart className="mr-2 h-5 w-5" />
+                Favorites
+              </div>
             </Link>
             <Link
               href="/about"

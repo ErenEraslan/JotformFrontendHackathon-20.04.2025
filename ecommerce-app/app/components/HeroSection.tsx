@@ -43,12 +43,7 @@ const HeroSection: React.FC = () => {
             >
               Shop Now
             </Link>
-            <Link
-              href="/categories"
-              className="rounded-md border border-white bg-transparent px-8 py-3 text-center text-base font-medium text-white transition-colors hover:bg-white/10"
-            >
-              View Categories
-            </Link>
+           
           </div>
         </div>
       </div>

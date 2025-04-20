@@ -25,17 +25,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="bg-white">
       <head>
         <link rel="icon" href="/jotform-icon.png" />
+        <style>{`
+          body {
+            background-color: white !important;
+          }
+        `}</style>
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}
       >
         <Providers>
           <ShoppingCart />
           <Header />
-          <main>{children}</main>
+          <main className="bg-white">{children}</main>
         </Providers>
       </body>
     </html>

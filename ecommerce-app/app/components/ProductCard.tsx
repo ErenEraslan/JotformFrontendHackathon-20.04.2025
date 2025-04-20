@@ -2,9 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { FiShoppingCart, FiX, FiZoomIn } from 'react-icons/fi';
+import Link from 'next/link';
+import { FiShoppingCart, FiX, FiZoomIn, FiHeart } from 'react-icons/fi';
 import { ProductItem } from '../api/jotform';
 import { useCart } from '../context/CartContext';
+import { useFavorites } from '../context/FavoritesContext';
 
 interface ProductCardProps {
   product: ProductItem & { source?: string };
@@ -12,10 +14,27 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
+  const { isFavorite, toggleFavorite } = useFavorites();
   const [imageError, setImageError] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isProductFavorite, setIsProductFavorite] = useState(false);
   const fallbackImage = `https://placehold.co/400x300/4096ff/ffffff?text=${encodeURIComponent(product.name)}`;
+
+  // Ensure we're using the product ID correctly for favorites
+  const getProductId = () => {
+    // If the ID contains an underscore (like "form1_123"), it's a prefixed ID
+    // In this case, we need to use the original ID for favorites to work correctly
+    if (product.id.includes('_')) {
+      return product.id;
+    }
+    return product.id;
+  };
+
+  // Update favorite state when component mounts or when favorites list changes
+  useEffect(() => {
+    setIsProductFavorite(isFavorite(getProductId()));
+  }, [product.id, isFavorite]);
 
   // Get the primary image to display
   const getImageUrl = () => {
@@ -54,22 +73,38 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isImageModalOpen]);
 
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toggleFavorite(product);
+    setIsProductFavorite(!isProductFavorite);
+  };
+
   return (
     <>
       <div className="group flex flex-col h-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md transition-all duration-300 hover:shadow-xl hover:scale-105 transform">
         <div className="relative h-64 w-full overflow-hidden bg-gray-200">
+          <button 
+            className="absolute top-2 right-2 z-10 rounded-full bg-white p-1.5 shadow-md hover:scale-110 transition-transform"
+            onClick={handleFavoriteClick}
+            aria-label={isProductFavorite ? "Remove from favorites" : "Add to favorites"}
+          >
+            <FiHeart 
+              className={`h-5 w-5 ${isProductFavorite ? 'text-red-500 fill-red-500' : 'text-gray-400'}`} 
+            />
+          </button>
           
-          <Image
-            src={getImageUrl()}
-            alt={product.name}
-            className="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-110 cursor-pointer"
-            width={400}
-            height={300}
-            onError={() => setImageError(true)}
-            onClick={openImageModal}
-            priority={false}
-            unoptimized={true}
-          />
+          <Link href={`/product/${product.id}`}>
+            <Image
+              src={getImageUrl()}
+              alt={product.name}
+              className="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-110 cursor-pointer"
+              width={400}
+              height={300}
+              onError={() => setImageError(true)}
+              priority={false}
+              unoptimized={true}
+            />
+          </Link>
           <button 
             className="absolute bottom-2 right-2 rounded-full bg-white p-1.5 shadow-md opacity-80 hover:opacity-100 transition-opacity"
             onClick={openImageModal}
@@ -81,7 +116,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         
         <div className="flex flex-1 flex-col p-4">
           <div className="mb-2 flex items-start justify-between">
-            <h3 className="text-lg font-medium text-gray-900 line-clamp-2">{product.name}</h3>
+            <Link href={`/product/${product.id}`} className="hover:text-blue-600">
+              <h3 className="text-lg font-medium text-gray-900 line-clamp-2">{product.name}</h3>
+            </Link>
             <p className="ml-2 text-lg font-semibold text-blue-600">${product.price.toFixed(2)}</p>
           </div>
           
