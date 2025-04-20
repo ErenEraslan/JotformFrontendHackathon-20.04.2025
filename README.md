@@ -33,7 +33,7 @@ JotShop is a modern e-commerce application built for the Jotform Frontend Hackat
 
 ### Step 1: Clone the Repository
 ```bash
-git clone https://github.com/your-username/JotformFrontendHackathon-20.04.2025.git
+git clone https://github.com/ErenEraslan/JotformFrontendHackathon-20.04.2025.git
 cd JotformFrontendHackathon-20.04.2025
 ```
 
