@@ -319,7 +319,7 @@ const CheckoutPage: React.FC = () => {
               </div>
             </div>
             
-            <div className="bg-white p-6 rounded-lg shadow-md">
+            <div className="bg-white p-8 rounded-lg shadow-lg border border-gray-200">
               <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
                 <FiCreditCard className="mr-2 h-5 w-5 text-blue-600" />
                 Payment Details
@@ -334,11 +334,11 @@ const CheckoutPage: React.FC = () => {
               
               <form onSubmit={handleSubmit}>
                 <div className="mb-6">
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Shipping Information</h3>
+                  <h3 className="text-lg font-semibold text-blue-700 mb-4 pb-2 border-b border-blue-200">Shipping Information</h3>
                   
                   <div className="mb-4">
-                    <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
-                      Full Name <span className="text-red-500">*</span>
+                    <label htmlFor="fullName" className="block text-sm font-bold text-gray-800 mb-2">
+                      Full Name <span className="text-red-700">*</span>
                     </label>
                     <input
                       type="text"
@@ -346,7 +346,7 @@ const CheckoutPage: React.FC = () => {
                       name="fullName"
                       value={formData.fullName}
                       onChange={handleInputChange}
-                      className={`w-full p-3 border ${formErrors.fullName ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500`}
+                      className={`w-full p-3 border-2 ${formErrors.fullName ? 'border-red-500' : 'border-gray-400'} bg-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-900 font-medium`}
                       required
                     />
                     {formErrors.fullName && (
@@ -355,7 +355,7 @@ const CheckoutPage: React.FC = () => {
                   </div>
                   
                   <div className="mb-4">
-                    <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="address" className="block text-sm font-bold text-gray-800 mb-2">
                       Address <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -364,7 +364,7 @@ const CheckoutPage: React.FC = () => {
                       name="address"
                       value={formData.address}
                       onChange={handleInputChange}
-                      className={`w-full p-3 border ${formErrors.address ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500`}
+                      className={`w-full p-3 border-2 ${formErrors.address ? 'border-red-500' : 'border-gray-400'} bg-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-900 font-medium`}
                       required
                     />
                     {formErrors.address && (
@@ -374,10 +374,10 @@ const CheckoutPage: React.FC = () => {
                 </div>
                 
                 <div className="mb-6">
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Card Information</h3>
+                  <h3 className="text-lg font-semibold text-blue-700 mb-4 pb-2 border-b border-blue-200">Card Information</h3>
                   
                   <div className="mb-4">
-                    <label htmlFor="cardNumber" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="cardNumber" className="block text-sm font-bold text-gray-800 mb-2">
                       Card Number
                     </label>
                     <input
@@ -387,7 +387,7 @@ const CheckoutPage: React.FC = () => {
                       placeholder="1234 5678 9012 3456"
                       value={formData.cardNumber}
                       onChange={handleInputChange}
-                      className={`w-full p-3 border ${formErrors.cardNumber ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500`}
+                      className={`w-full p-3 border-2 ${formErrors.cardNumber ? 'border-red-500' : 'border-gray-400'} bg-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-900 font-medium`}
                       required
                     />
                     {formErrors.cardNumber && (
@@ -396,7 +396,7 @@ const CheckoutPage: React.FC = () => {
                   </div>
                   
                   <div className="mb-4">
-                    <label htmlFor="cardName" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="cardName" className="block text-sm font-bold text-gray-800 mb-2">
                       Name on Card
                     </label>
                     <input
@@ -406,7 +406,7 @@ const CheckoutPage: React.FC = () => {
                       placeholder="John Doe"
                       value={formData.cardName}
                       onChange={handleInputChange}
-                      className={`w-full p-3 border ${formErrors.cardName ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500`}
+                      className={`w-full p-3 border-2 ${formErrors.cardName ? 'border-red-500' : 'border-gray-400'} bg-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-900 font-medium`}
                       required
                     />
                     {formErrors.cardName && (
@@ -416,7 +416,7 @@ const CheckoutPage: React.FC = () => {
                   
                   <div className="flex space-x-4">
                     <div className="w-1/2">
-                      <label htmlFor="expiry" className="block text-sm font-medium text-gray-700 mb-1">
+                      <label htmlFor="expiry" className="block text-sm font-bold text-gray-800 mb-2">
                         Expiry Date
                       </label>
                       <input
@@ -426,7 +426,7 @@ const CheckoutPage: React.FC = () => {
                         placeholder="MM/YY"
                         value={formData.expiry}
                         onChange={handleInputChange}
-                        className={`w-full p-3 border ${formErrors.expiry ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500`}
+                        className={`w-full p-3 border-2 ${formErrors.expiry ? 'border-red-500' : 'border-gray-400'} bg-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-900 font-medium`}
                         required
                       />
                       {formErrors.expiry && (
@@ -434,7 +434,7 @@ const CheckoutPage: React.FC = () => {
                       )}
                     </div>
                     <div className="w-1/2">
-                      <label htmlFor="cvv" className="block text-sm font-medium text-gray-700 mb-1">
+                      <label htmlFor="cvv" className="block text-sm font-bold text-gray-800 mb-2">
                         CVV
                       </label>
                       <input
@@ -444,7 +444,7 @@ const CheckoutPage: React.FC = () => {
                         placeholder="123"
                         value={formData.cvv}
                         onChange={handleInputChange}
-                        className={`w-full p-3 border ${formErrors.cvv ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500`}
+                        className={`w-full p-3 border-2 ${formErrors.cvv ? 'border-red-500' : 'border-gray-400'} bg-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-900 font-medium`}
                         required
                       />
                       {formErrors.cvv && (
